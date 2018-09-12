@@ -24,7 +24,7 @@ public class DeleteGenerator extends BaseGenerator {
 	@Override
 	public String generateSql(Statement statement, ResultSet rs) throws Exception{
 		Delete delete = (Delete) statement;
-		BinaryExpression binaryExpression = (BinaryExpression)(delete.getWhere().getClass().cast(delete.getWhere()));
+		BinaryExpression binaryExpression = castToBinaryExpression(delete.getWhere());
 		fillRightExpression(binaryExpression,rs);
 		
 		return delete.toString();

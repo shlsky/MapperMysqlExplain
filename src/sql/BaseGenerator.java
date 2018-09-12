@@ -3,6 +3,7 @@ package sql;
 import a.f.E;
 import net.sf.jsqlparser.expression.BinaryExpression;
 import net.sf.jsqlparser.expression.DoubleValue;
+import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.StringValue;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
@@ -23,6 +24,18 @@ public abstract class BaseGenerator {
 	 */
 	public abstract String generateSql(Statement statement,ResultSet rs) throws Exception;
 	
+	/**
+	 * 转换成BinaryExpression队形
+	 * @param expression
+	 * @return
+	 * @throws Exception
+	 */
+	public BinaryExpression castToBinaryExpression(Expression expression)throws Exception {
+		if (expression instanceof BinaryExpression){
+			return (BinaryExpression)(expression.getClass().cast(expression));
+		}
+		throw new RuntimeException("无法解析成BinaryExpression");
+	}
 	
 	/**
 	 * 获取列在行中的索引
