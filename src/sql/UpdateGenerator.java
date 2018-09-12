@@ -37,6 +37,21 @@ public class UpdateGenerator extends BaseGenerator {
 
 	
 	/**
+	 * 获取表名称
+	 *
+	 * @param statement
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public String fetchTableName(Statement statement) throws Exception {
+		
+		Update update = (Update) statement;
+		
+		return update.getTable().getName();
+	}
+	
+	/**
 	 * 能否处理
 	 *
 	 * @param statement

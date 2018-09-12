@@ -14,6 +14,8 @@ import org.apache.ibatis.session.Configuration;
 
 import javax.swing.*;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,23 +38,32 @@ public class MapperMysqlExplainAction extends AnAction {
 		// 获取当前选择的文件或文件夹路径
 		final VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
 		
+		
 		DbParamsDialog dbParamsDialog = new DbParamsDialog((dbUrl, dbUser, dbPassword) -> {
 			if (jTextArea != null && file != null) {
 				Configuration configuration = new Configuration();
-				
+				MapperSqlParserExplain parserExplain = new MapperSqlParserExplain();
 				try (InputStream inputStream = file.getInputStream()) {
+					Class.forName("com.mysql.jdbc.Driver").newInstance();
+					Connection conn = DriverManager.getConnection("jdbc:mysql://192.168.1.250:3307/growth","dev_w","6nvjq0_HW");
 					XPathParser xPathParser = new XPathParser(inputStream, true, configuration.getVariables(), new XMLMapperEntityResolver());
 					List<XNode> list = xPathParser.evalNode("/mapper").evalNodes("select|insert|update|delete");
 					for (XNode xNode : list) {
 						MapperXmlParser mapperXmlParser = new MapperXmlParser(configuration, xNode);
+						String sqlTemplate = mapperXmlParser.parseDynamicTags(xNode).replaceAll("#\\{.*?}","?");
+						String realSql = parserExplain.parseToRealSql(sqlTemplate,conn);
+						String explainResult = parserExplain.executeSqlExplain(realSql,conn);
+						jTextArea.append("###############################################################################################\n");
 						
-						
-						jTextArea.append("sql list : " + mapperXmlParser.parseDynamicTags(xNode).replaceAll("#\\{.*?}","?") + "\n");
-						jTextArea.append("------------------------------------------------------------\n");
+						jTextArea.append(realSql + "\n");
+						jTextArea.append("***********************************mysql explain 结果******************************************\n");
+						jTextArea.append(explainResult + "\n");
+						jTextArea.append("###############################################################################################\n");
 					}
 					
 				} catch (Exception e1) {
-					throw new RuntimeException(e1);
+					e1.printStackTrace();
+					jTextArea.append("sql解析失败了,"+e1.getMessage());
 				}
 			}
 		});

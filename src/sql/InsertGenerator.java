@@ -8,6 +8,9 @@ import net.sf.jsqlparser.expression.operators.relational.MultiExpressionList;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.insert.Insert;
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.select.SelectBody;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -30,6 +33,19 @@ public class InsertGenerator extends BaseGenerator {
 		fillInsertValue(insert,rs);
 
 		return insert.toString();
+	}
+	
+	/**
+	 * 获取表名称
+	 *
+	 * @param statement
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public String fetchTableName(Statement statement) throws Exception {
+		Insert insert = (Insert) statement;
+		return insert.getTable().getName();
 	}
 	
 	/**

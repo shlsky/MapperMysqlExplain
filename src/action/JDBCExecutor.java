@@ -1,15 +1,8 @@
 package action;
 
-import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.statement.delete.Delete;
-import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.update.Update;
-import sql.DeleteGenerator;
-import sql.InsertGenerator;
-import sql.SelectGenerator;
-import sql.UpdateGenerator;
 
 import java.sql.*;
 
@@ -66,6 +59,26 @@ public class JDBCExecutor {
 //			}
 
 
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Connection conn = DriverManager.getConnection("jdbc:mysql://192.168.1.250:3307/growth","dev_w","6nvjq0_HW");
+			Statement statement = conn.createStatement();
+			ResultSet rs= statement.executeQuery("SELECT * FROM dada_grade.supplier_privilege_type");
+			ResultSetMetaData metaData = rs.getMetaData();
+			ResultSet rs1= rs;
+			while (rs.next()){
+				
+				for (int i=1;i<=metaData.getColumnCount();i++){
+					System.out.println(String.format("%-15s",metaData.getColumnName(i)) + " : " + rs.getString(i));
+				}
+				
+			}
+			rs.first();
+			Select delete = (Select) CCJSqlParserUtil.parse("select * from supplier_privilege_type\n" + " where id = ? and privilege_name=? order by id desc");
+			
+			
+			System.out.println(delete);
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
