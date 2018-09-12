@@ -1,8 +1,12 @@
 package action;
 
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.update.Update;
+import sql.InsertGenerator;
+import sql.SelectGenerator;
+import sql.UpdateGenerator;
 
 import java.sql.*;
 
@@ -17,34 +21,31 @@ public class JDBCExecutor {
 
 	public static void main(String[] args) {
 		try {
-//			Class.forName("com.mysql.jdbc.Driver").newInstance();
-//			Connection conn = DriverManager.getConnection("jdbc:mysql://192.168.1.250:3307/growth","dev_w","6nvjq0_HW");
-//			Statement statement = conn.createStatement();
-//			ResultSet rs= statement.executeQuery("SELECT * FROM dada_grade.supplier_privilege_type");
-//			ResultSetMetaData metaData = rs.getMetaData();
-//			ResultSet rs1= rs;
-//			while (rs.next()){
-//
-//				for (int i=1;i<=metaData.getColumnCount();i++){
-//					System.out.println(String.format("%-15s",metaData.getColumnName(i)) + " : " + rs.getString(i));
-//				}
-//
-//			}
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Connection conn = DriverManager.getConnection("jdbc:mysql://192.168.1.250:3307/growth","dev_w","6nvjq0_HW");
+			Statement statement = conn.createStatement();
+			ResultSet rs= statement.executeQuery("SELECT * FROM dada_grade.supplier_privilege_type");
+			ResultSetMetaData metaData = rs.getMetaData();
+			ResultSet rs1= rs;
+			while (rs.next()){
+
+				for (int i=1;i<=metaData.getColumnCount();i++){
+					System.out.println(String.format("%-15s",metaData.getColumnName(i)) + " : " + rs.getString(i));
+				}
+
+			}
 
 			Update update = (Update) CCJSqlParserUtil.parse("update supplier_privilege_type\n" +"set privilege_name=?,privilege_desc=? where id=? and privilege_code=?");
-			System.out.println(update.toString());
-//			UpdateGenerator updateGenerator = new UpdateGenerator();
-//			System.out.println(updateGenerator.generateSql(update,rs));
-			//
+			UpdateGenerator updateGenerator = new UpdateGenerator();
+			System.out.println(updateGenerator.generateSql(update,rs));
 //
-//			Insert insert = (Insert) CCJSqlParserUtil.parse("insert into supplier_privilege_type(privilege_name,privilege_code,privilege_desc)\n"+"values(?,?,?),(?,?,?)");
-//			InsertGenerator insertGenerator = new InsertGenerator();
-//			System.out.println(insertGenerator.generateSql(insert,rs));
+			Insert insert = (Insert) CCJSqlParserUtil.parse("insert into supplier_privilege_type(privilege_name,privilege_code,privilege_desc,sequence)\n"+"values(?,?,?,?),(?,?,?,?),(?,?,?,?)");
+			InsertGenerator insertGenerator = new InsertGenerator();
+			System.out.println(insertGenerator.generateSql(insert,rs));
 
-//			rs.first();
-//			Select select = (Select) CCJSqlParserUtil.parse("select * from supplier_privilege_type\n" + " where id = ? and privilege_name=?");
-//			SelectGenerator selectGenerator = new SelectGenerator();
-//			System.out.println(selectGenerator.generateSql(select,rs));
+			Select select = (Select) CCJSqlParserUtil.parse("select * from supplier_privilege_type\n" + " where id = ? and privilege_name=?");
+			SelectGenerator selectGenerator = new SelectGenerator();
+			System.out.println(selectGenerator.generateSql(select,rs));
 
 //			Delete delete = (Delete) CCJSqlParserUtil.parse("delete from supplier_privilege_type\n" + " where id = ? and privilege_name=?");
 //
@@ -57,26 +58,6 @@ public class JDBCExecutor {
 //			if (binaryExpression.getRightExpression() instanceof JdbcParameter){
 //				binaryExpression.setRightExpression(new StringValue("{{"+binaryExpression.getLeftExpression().toString()+"}}"));
 //			}
-
-
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			Connection conn = DriverManager.getConnection("jdbc:mysql://192.168.1.250:3307/growth","dev_w","6nvjq0_HW");
-			Statement statement = conn.createStatement();
-			ResultSet rs= statement.executeQuery("SELECT * FROM dada_grade.supplier_privilege_type");
-			ResultSetMetaData metaData = rs.getMetaData();
-			ResultSet rs1= rs;
-			while (rs.next()){
-				
-				for (int i=1;i<=metaData.getColumnCount();i++){
-					System.out.println(String.format("%-15s",metaData.getColumnName(i)) + " : " + rs.getString(i));
-				}
-				
-			}
-			rs.first();
-			Select delete = (Select) CCJSqlParserUtil.parse("select * from supplier_privilege_type\n" + " where id = ? and privilege_name=? order by id desc");
-			
-			
-			System.out.println(delete);
 			
 			
 		} catch (Exception e) {

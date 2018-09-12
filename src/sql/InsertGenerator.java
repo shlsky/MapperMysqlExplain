@@ -8,9 +8,6 @@ import net.sf.jsqlparser.expression.operators.relational.MultiExpressionList;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.insert.Insert;
-import net.sf.jsqlparser.statement.select.PlainSelect;
-import net.sf.jsqlparser.statement.select.Select;
-import net.sf.jsqlparser.statement.select.SelectBody;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -69,7 +66,6 @@ public class InsertGenerator extends BaseGenerator {
 		List<Column> columns = insert.getColumns();
 		MultiExpressionList multiExpressions = (MultiExpressionList)insert.getItemsList();
 		List<ExpressionList> expressionsExprList =  multiExpressions.getExprList();//2
-
 
 		MultiExpressionList multiExpressionList = new MultiExpressionList();
 		for(int j=0;j<expressionsExprList.size();j++) {
