@@ -25,6 +25,14 @@ public abstract class BaseGenerator {
 	public abstract String generateSql(Statement statement,ResultSet rs) throws Exception;
 	
 	/**
+	 * 获取表名称
+	 * @param statement
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract String fetchTableName(Statement statement) throws Exception;
+	
+	/**
 	 * 转换成BinaryExpression队形
 	 * @param expression
 	 * @return

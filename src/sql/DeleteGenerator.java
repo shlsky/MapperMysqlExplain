@@ -30,6 +30,19 @@ public class DeleteGenerator extends BaseGenerator {
 		return delete.toString();
 	}
 	
+	/**
+	 * 获取表名称
+	 *
+	 * @param statement
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public String fetchTableName(Statement statement) throws Exception {
+		Delete delete = (Delete) statement;
+		
+		return delete.getTable().getName();
+	}
 	
 	
 	/**

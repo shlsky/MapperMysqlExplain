@@ -43,11 +43,10 @@ public class JDBCExecutor {
 				
 			}
 			rs.first();
-			Delete delete = (Delete) CCJSqlParserUtil.parse("delete from supplier_privilege_type\n" + " where id = ? and privilege_name=?");
+			Select delete = (Select) CCJSqlParserUtil.parse("select * from supplier_privilege_type\n" + " where id = ? and privilege_name=? order by id desc");
 			
-			DeleteGenerator deleteGenerator = new DeleteGenerator();
 			
-			System.out.println(deleteGenerator.generateSql(delete,rs));
+			System.out.println(delete);
 			
 			
 		} catch (Exception e) {
