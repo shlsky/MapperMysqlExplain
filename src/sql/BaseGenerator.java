@@ -60,8 +60,9 @@ public abstract class BaseGenerator {
 		
 		if (binaryExpression.getLeftExpression() instanceof Column){
 			Integer index = getColumnIndex(binaryExpression.getLeftExpression().toString(),rs);
-			Object object = rs.getObject(index);
 			rs.next();
+			Object object = rs.getObject(index);
+
 			if (object instanceof Number){
 				binaryExpression.setRightExpression(new DoubleValue(object.toString()));
 			} else {

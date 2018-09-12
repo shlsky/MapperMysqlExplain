@@ -1,32 +1,21 @@
 package action;
 
-import com.mysql.jdbc.ResultSetImpl;
-import net.sf.jsqlparser.JSQLParserException;
-import net.sf.jsqlparser.expression.BinaryExpression;
-import net.sf.jsqlparser.expression.JdbcParameter;
-import net.sf.jsqlparser.expression.LongValue;
-import net.sf.jsqlparser.expression.StringValue;
-import net.sf.jsqlparser.parser.CCJSqlParserManager;
+import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.schema.Column;
-import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.delete.Delete;
-import net.sf.jsqlparser.statement.insert.Insert;
-import net.sf.jsqlparser.statement.select.Select;
-import net.sf.jsqlparser.util.deparser.ExpressionDeParser;
-import net.sf.jsqlparser.util.deparser.ReplaceDeParser;
-import net.sf.jsqlparser.util.deparser.SelectDeParser;
-import net.sf.jsqlparser.util.deparser.StatementDeParser;
 import sql.DeleteGenerator;
 
-import java.io.StringReader;
 import java.sql.*;
 
 /**
  * Created by hongling.shl on 2018/9/11.
  */
 public class JDBCExecutor {
-	
+	private static String driver = "com.mysql.jdbc.Driver";
+	private static String url;
+	private static String username;
+	private static String password;
+
 	public static void main(String[] args) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -48,11 +37,44 @@ public class JDBCExecutor {
 			DeleteGenerator deleteGenerator = new DeleteGenerator();
 			
 			System.out.println(deleteGenerator.generateSql(delete,rs));
-			
-			
+
+			BinaryExpression binaryExpression = (BinaryExpression)(delete.getWhere().getClass().cast(delete.getWhere()));
+
+			if (binaryExpression.getRightExpression() instanceof JdbcParameter){
+				binaryExpression.setRightExpression(new StringValue("{{"+binaryExpression.getLeftExpression().toString()+"}}"));
+			}
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public static void init(String url,String username,String password){
+		JDBCExecutor.url = url;
+		JDBCExecutor.username = username;
+		JDBCExecutor.password = password;
+	}
+
+	public static Connection getConnection() throws Exception{
+		try{
+			Class.forName(driver).newInstance();
+			return DriverManager.getConnection(url,username,password);
+		}catch (Exception e){
+			throw new Exception();
+		}
+	}
+
+	public static ResultSet getData(String tableName) throws Exception{
+
+		String sql = "select * from "+tableName+" limit 10";
+
+		Connection conn = getConnection();
+		Statement statement = conn.createStatement();
+
+		ResultSet rs = statement.executeQuery(sql);
+		return rs;
+
+	}
+
 }
