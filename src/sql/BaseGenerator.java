@@ -1,15 +1,20 @@
 package sql;
 
-import a.f.E;
-import net.sf.jsqlparser.expression.BinaryExpression;
-import net.sf.jsqlparser.expression.DoubleValue;
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.StringValue;
+import net.sf.jsqlparser.expression.*;
+import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
+import net.sf.jsqlparser.expression.operators.relational.ItemsList;
+import net.sf.jsqlparser.expression.operators.relational.ItemsListVisitor;
+import net.sf.jsqlparser.expression.operators.relational.MultiExpressionList;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.insert.Insert;
+import net.sf.jsqlparser.statement.update.Update;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by hongling.shl on 2018/9/11.
@@ -43,7 +48,7 @@ public abstract class BaseGenerator {
 	 * @param rs
 	 * @return
 	 */
-	private Integer getColumnIndex(String columnName,ResultSet rs) throws Exception {
+	protected Integer getColumnIndex(String columnName,ResultSet rs) throws Exception {
 		rs.first();
 		ResultSetMetaData metaData = rs.getMetaData();
 		for (int i=1;i<=metaData.getColumnCount();i++){
@@ -54,7 +59,11 @@ public abstract class BaseGenerator {
 		
 		throw new RuntimeException("无法找到列名对应的位置");
 	}
-	
+
+
+
+
+
 	/**
 	 * 填充表达式右边的值
 	 * @param binaryExpression

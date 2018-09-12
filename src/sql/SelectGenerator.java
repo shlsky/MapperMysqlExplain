@@ -1,6 +1,8 @@
 package sql;
 
+import net.sf.jsqlparser.expression.BinaryExpression;
 import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 
 import java.sql.ResultSet;
@@ -18,7 +20,11 @@ public class SelectGenerator extends BaseGenerator {
 	 */
 	@Override
 	public String generateSql(Statement statement, ResultSet rs) throws Exception {
-		return null;
+		Select select = (Select) statement;
+		PlainSelect selectBody = (PlainSelect) select.getSelectBody();
+		BinaryExpression binaryExpression = castToBinaryExpression(selectBody.getWhere());
+		fillRightExpression(binaryExpression,rs);
+		return select.toString();
 	}
 	
 	/**
