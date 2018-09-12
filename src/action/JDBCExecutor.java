@@ -1,9 +1,13 @@
 package action;
 
+import net.sf.jsqlparser.expression.JdbcParameter;
+import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.update.Update;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import sql.InsertGenerator;
 import sql.SelectGenerator;
 import sql.UpdateGenerator;
@@ -34,18 +38,23 @@ public class JDBCExecutor {
 				}
 
 			}
-
-			Update update = (Update) CCJSqlParserUtil.parse("update supplier_privilege_type\n" +"set privilege_name=?,privilege_desc=? where id=? and privilege_code=?");
-			UpdateGenerator updateGenerator = new UpdateGenerator();
-			System.out.println(updateGenerator.generateSql(update,rs));
+//			EqualsTo
+//			Update update = (Update) CCJSqlParserUtil.parse("update supplier_privilege_type\n" +"set privilege_name=?,privilege_desc=? where id=? and privilege_code=?");
+//			UpdateGenerator updateGenerator = new UpdateGenerator();
+//			System.out.println(updateGenerator.generateSql(update,rs));
 //
-			Insert insert = (Insert) CCJSqlParserUtil.parse("insert into supplier_privilege_type(privilege_name,privilege_code,privilege_desc,sequence)\n"+"values(?,?,?,?),(?,?,?,?),(?,?,?,?)");
+//
+//			Select select = (Select) CCJSqlParserUtil.parse("select * from supplier_privilege_type\n"+"where id in (?,?) and sequence = 1 and is_del = ?");
+//			System.out.println(select.toString());
+			Insert insert =(Insert) CCJSqlParserUtil.parse("insert into supplier_privilege_type(privilege_name,privilege_desc,sequence)\n"+"values(?,?,?)");
 			InsertGenerator insertGenerator = new InsertGenerator();
 			System.out.println(insertGenerator.generateSql(insert,rs));
 
-			Select select = (Select) CCJSqlParserUtil.parse("select * from supplier_privilege_type\n" + " where id = ? and privilege_name=?");
-			SelectGenerator selectGenerator = new SelectGenerator();
-			System.out.println(selectGenerator.generateSql(select,rs));
+//			System.out.println(insert.toString());
+//
+//			Select select = (Select) CCJSqlParserUtil.parse("select * from supplier_privilege_type\n" + " where id = ? and privilege_name=?");
+//			SelectGenerator selectGenerator = new SelectGenerator();
+//			System.out.println(selectGenerator.generateSql(select,rs));
 
 //			Delete delete = (Delete) CCJSqlParserUtil.parse("delete from supplier_privilege_type\n" + " where id = ? and privilege_name=?");
 //

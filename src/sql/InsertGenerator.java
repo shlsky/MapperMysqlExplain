@@ -4,6 +4,7 @@ import net.sf.jsqlparser.expression.DoubleValue;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.StringValue;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
+import net.sf.jsqlparser.expression.operators.relational.ItemsList;
 import net.sf.jsqlparser.expression.operators.relational.MultiExpressionList;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
@@ -64,11 +65,12 @@ public class InsertGenerator extends BaseGenerator {
 	 */
 	public void fillInsertValue(Insert insert, ResultSet rs) throws Exception{
 		List<Column> columns = insert.getColumns();
-		MultiExpressionList multiExpressions = (MultiExpressionList)insert.getItemsList();
-		List<ExpressionList> expressionsExprList =  multiExpressions.getExprList();//2
+
+//		MultiExpressionList multiExpressions = (MultiExpressionList)insert.getItemsList();
+//		List<ExpressionList> expressionsExprList =  multiExpressions.getExprList();//2
 
 		MultiExpressionList multiExpressionList = new MultiExpressionList();
-		for(int j=0;j<expressionsExprList.size();j++) {
+//		for(int j=0;j<expressionsExprList.size();j++) {
 
 			List<Expression> expressions = new ArrayList<>();
 			for(int i=0;i<columns.size();i++) {
@@ -86,7 +88,7 @@ public class InsertGenerator extends BaseGenerator {
 			expressionList.setExpressions(expressions);
 
 			multiExpressionList.addExpressionList(expressionList);
-		}
+//		}
 
 		insert.setItemsList(multiExpressionList);
 	}
