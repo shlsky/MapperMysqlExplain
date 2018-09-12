@@ -1,6 +1,10 @@
 package sql;
 
 import net.sf.jsqlparser.expression.BinaryExpression;
+import net.sf.jsqlparser.expression.DoubleValue;
+import net.sf.jsqlparser.expression.JdbcParameter;
+import net.sf.jsqlparser.expression.StringValue;
+import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
 
@@ -9,7 +13,7 @@ import java.sql.ResultSet;
 /**
  * Created by hongling.shl on 2018/9/11.
  */
-public class DeleteGenerator implements SQLGenerator {
+public class DeleteGenerator extends BaseGenerator {
 	/**
 	 * 生成sql
 	 *
@@ -18,14 +22,15 @@ public class DeleteGenerator implements SQLGenerator {
 	 * @return
 	 */
 	@Override
-	public String generatSql(Statement statement, ResultSet rs) {
+	public String generateSql(Statement statement, ResultSet rs) throws Exception{
 		Delete delete = (Delete) statement;
 		BinaryExpression binaryExpression = (BinaryExpression)(delete.getWhere().getClass().cast(delete.getWhere()));
+		fillRightExpression(binaryExpression,rs);
 		
-		
-		
-		return null;
+		return delete.toString();
 	}
+	
+	
 	
 	/**
 	 * 能否处理

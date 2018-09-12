@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 /**
  * Created by hongling.shl on 2018/9/11.
  */
-public class InsertGenerator implements SQLGenerator {
+public class InsertGenerator extends BaseGenerator {
 	/**
 	 * 生成sql
 	 *
@@ -17,7 +17,7 @@ public class InsertGenerator implements SQLGenerator {
 	 * @return
 	 */
 	@Override
-	public String generatSql(Statement statement, ResultSet rs) {
+	public String generateSql(Statement statement, ResultSet rs) throws Exception {
 		return null;
 	}
 	

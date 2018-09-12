@@ -37,7 +37,7 @@
 
   <actions>
     <!-- Add your actions here -->
-	  <action id="MapperMysqlExplain" class="action.MapperMysqlExplain" text="MapperMysqlExplain"
+	  <action id="MapperMysqlExplain" class="action.MapperMysqlExplainAction" text="MapperMysqlExplain"
 		  description="MapperMysqlExplain"><add-to-group group-id="ProjectViewPopupMenu" anchor="first" /></action></actions>
 
 </idea-plugin>

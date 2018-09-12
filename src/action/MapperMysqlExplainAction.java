@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 
-public class MapperMysqlExplain extends AnAction {
+public class MapperMysqlExplainAction extends AnAction {
 	
 	private JTextArea jTextArea;
 	
@@ -38,7 +38,6 @@ public class MapperMysqlExplain extends AnAction {
 		
 		DbParamsDialog dbParamsDialog = new DbParamsDialog((dbUrl, dbUser, dbPassword) -> {
 			if (jTextArea != null && file != null) {
-				String resource = file.getPath();
 				Configuration configuration = new Configuration();
 				
 				try (InputStream inputStream = file.getInputStream()) {
