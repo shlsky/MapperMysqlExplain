@@ -19,12 +19,12 @@ public class DbParamsDialog extends JDialog {
 		setModal(true);
 		getRootPane().setDefaultButton(buttonOK);
 		setTitle("数据库链接配置"); // 设置title
-		setSize(500, 300); // 设置窗口大小
+		setSize(300, 200); // 设置窗口大小
 		
 		// 设置窗口位置
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int Swing1x = 500;
-		int Swing1y = 300;
+		int Swing1x = 300;
+		int Swing1y = 200;
 		setBounds((screenSize.width - Swing1x) / 2, (screenSize.height - Swing1y) / 2 - 100, Swing1x, Swing1y);
 		
 		
@@ -66,10 +66,25 @@ public class DbParamsDialog extends JDialog {
 		dispose();
 	}
 	
+	public JTextField getDb_url() {
+		return db_url;
+	}
+	
+	public JPasswordField getDb_password() {
+		return db_password;
+	}
+	
+	public JTextField getDb_user() {
+		return db_user;
+	}
+	
 	public static void main(String[] args) {
 		DbParamsDialog dialog = new DbParamsDialog(null);
+		dialog.getDb_url().setText("hahahahaha");
 		dialog.pack();
+		
 		dialog.setVisible(true);
+		
 		System.exit(0);
 	}
 }

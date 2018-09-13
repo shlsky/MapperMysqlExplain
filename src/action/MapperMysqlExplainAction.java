@@ -1,5 +1,6 @@
 package action;
 
+import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.StdFileTypes;
@@ -7,6 +8,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import dialog.DbParamsDialog;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
@@ -20,6 +22,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class MapperMysqlExplainAction extends AnAction {
+	
+	//jdbc:mysql://192.168.1.250:3307/growth
+	private static final String LAST_DB_URL = "LAST_DB_URL";
+	
+	//dev_w
+	private static final String LAST_DB_USER = "LAST_DB_USER";
+	
+	//6nvjq0_HW
+	private static final String LAST_DB_PASSWORD = "LAST_DB_PASSWORD";
 	
 	private JTextArea jTextArea;
 	
@@ -37,54 +48,64 @@ public class MapperMysqlExplainAction extends AnAction {
 		
 		// 获取当前选择的文件或文件夹路径
 		final VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
+		PropertiesComponent component = PropertiesComponent.getInstance(e.getProject());
 		
 		
 		DbParamsDialog dbParamsDialog = new DbParamsDialog((dbUrl, dbUser, dbPassword) -> {
+			component.setValue(LAST_DB_URL, dbUrl);
+			component.setValue(LAST_DB_USER, dbUser);
+			component.setValue(LAST_DB_PASSWORD, dbPassword);
 			if (jTextArea != null && file != null) {
 				Configuration configuration = new Configuration();
 				MapperSqlParserExplain parserExplain = new MapperSqlParserExplain();
 				try (InputStream inputStream = file.getInputStream()) {
 					Class.forName("com.mysql.jdbc.Driver").newInstance();
-					Connection conn = DriverManager.getConnection("jdbc:mysql://192.168.1.250:3307/growth","dev_w","6nvjq0_HW");
+					Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 					XPathParser xPathParser = new XPathParser(inputStream, true, configuration.getVariables(), new XMLMapperEntityResolver());
 					List<XNode> list = xPathParser.evalNode("/mapper").evalNodes("select|insert|update|delete");
 					for (XNode xNode : list) {
 						MapperXmlParser mapperXmlParser = new MapperXmlParser(configuration, xNode);
-						String sqlTemplate = mapperXmlParser.parseDynamicTags(xNode).replaceAll("#\\{.*?}","?");
-						String realSql = parserExplain.parseToRealSql(sqlTemplate,conn);
-						String explainResult = parserExplain.executeSqlExplain(realSql,conn);
-						jTextArea.append("###############################################################################################\n");
+						String sqlTemplate = mapperXmlParser.parseDynamicTags(xNode).replaceAll("#\\{.*?}", "?");
+						String realSql = parserExplain.parseToRealSql(sqlTemplate, conn);
+						String explainResult = parserExplain.executeSqlExplain(realSql, conn);
+						jTextArea.append("###############################################################################################\n\n");
 						
-						jTextArea.append(realSql + "\n");
-						jTextArea.append("***********************************mysql explain 结果******************************************\n");
-						jTextArea.append(explainResult + "\n");
-						jTextArea.append("###############################################################################################\n");
+						jTextArea.append(realSql + "\n\n");
+						jTextArea.append("***********************************mysql explain 结果******************************************\n\n");
+						jTextArea.append(explainResult + "\n\n");
+						jTextArea.append("###############################################################################################\n\n\n");
 					}
 					
 				} catch (Exception e1) {
 					e1.printStackTrace();
-					jTextArea.append("sql解析失败了,"+e1.getMessage());
+					jTextArea.append("sql解析失败了," + e1.getMessage());
 				}
 			}
 		});
+		if (!StringUtils.isBlank(component.getValue(LAST_DB_URL)) && !StringUtils.isBlank(component.getValue(LAST_DB_USER)) && !StringUtils.isBlank(component.getValue(LAST_DB_PASSWORD))) {
+			
+			dbParamsDialog.getDb_url().setText(component.getValue(LAST_DB_URL));
+			dbParamsDialog.getDb_user().setText(component.getValue(LAST_DB_USER));
+			dbParamsDialog.getDb_password().setText(component.getValue(LAST_DB_PASSWORD));
+		}
 		
 		dbParamsDialog.setVisible(true);
 	}
-
+	
 	@Override
 	public void update(AnActionEvent e) {
 		super.update(e);
-
-		try{
+		
+		try {
 			boolean visible = isActionAvailable(e);
 			final Presentation presentation = e.getPresentation();
 			presentation.setVisible(visible);
-		}catch (Exception exception){
+		} catch (Exception exception) {
 			exception.printStackTrace();
 		}
 	}
-
-	private boolean isActionAvailable(AnActionEvent e) throws Exception{
+	
+	private boolean isActionAvailable(AnActionEvent e) throws Exception {
 		final VirtualFile file = getVirtualFiles(e);
 		if (getEventProject(e) != null && file != null) {
 			final FileType fileType = file.getFileType();
@@ -96,19 +117,19 @@ public class MapperMysqlExplainAction extends AnAction {
 				Configuration configuration = new Configuration();
 				XPathParser xPathParser = new XPathParser(inputStream, true, configuration.getVariables(), new XMLMapperEntityResolver());
 				XNode xNode = xPathParser.evalNode("/mapper");
-				if(!Objects.isNull(xNode)) {
+				if (!Objects.isNull(xNode)) {
 					return true;
 				}
-			}catch (Exception e1){
+			} catch (Exception e1) {
 				return false;
 			}
 		}
-
+		
 		return false;
 	}
-
+	
 	private VirtualFile getVirtualFiles(AnActionEvent e) {
 		return PlatformDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
 	}
-
+	
 }
