@@ -19,12 +19,12 @@ public class DbParamsDialog extends JDialog {
 		setModal(true);
 		getRootPane().setDefaultButton(buttonOK);
 		setTitle("数据库链接配置"); // 设置title
-		setSize(300, 200); // 设置窗口大小
+		setSize(400, 280); // 设置窗口大小
 		
 		// 设置窗口位置
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int Swing1x = 300;
-		int Swing1y = 200;
+		int Swing1x = 400;
+		int Swing1y = 280;
 		setBounds((screenSize.width - Swing1x) / 2, (screenSize.height - Swing1y) / 2 - 100, Swing1x, Swing1y);
 		
 		

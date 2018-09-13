@@ -125,7 +125,7 @@ public class MapperXmlParser extends BaseBuilder {
 		@Override
 		public void handleNode(XNode nodeToHandle, List<String> targetContents) {
 			targetContents.add("where ");
-			String contents = parseDynamicTags(nodeToHandle).replaceAll(" ","");
+			String contents = parseDynamicTags(nodeToHandle);
 			if (contents.endsWith(",")){
 				contents = contents.substring(0,contents.length()-1);
 			}

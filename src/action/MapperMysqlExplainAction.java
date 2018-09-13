@@ -68,12 +68,12 @@ public class MapperMysqlExplainAction extends AnAction {
 						String sqlTemplate = mapperXmlParser.parseDynamicTags(xNode).replaceAll("#\\{.*?}", "?");
 						String realSql = parserExplain.parseToRealSql(sqlTemplate, conn);
 						String explainResult = parserExplain.executeSqlExplain(realSql, conn);
-						jTextArea.append("###############################################################################################\n\n");
-						
-						jTextArea.append(realSql + "\n\n");
-						jTextArea.append("***********************************mysql explain 结果******************************************\n\n");
+						jTextArea.append("########################################################################\n\n");
+						jTextArea.append("mapper sql id : "+xNode.getStringAttribute("id") + " \n\n");
+						jTextArea.append("参数代入生成sql : \n" +realSql + "\n\n");
+						jTextArea.append("-----------------------------mysql explain 结果-------------------------\n\n");
 						jTextArea.append(explainResult + "\n\n");
-						jTextArea.append("###############################################################################################\n\n\n");
+						
 					}
 					
 				} catch (Exception e1) {
