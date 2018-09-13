@@ -78,7 +78,7 @@ public class MapperMysqlExplainAction extends AnAction {
 					
 				} catch (Exception e1) {
 					e1.printStackTrace();
-					jTextArea.append("sql解析失败了," + e1.getMessage());
+					jTextArea.append("sql解析失败了," + e1.getMessage() +"\n\n");
 				}
 			}
 		});

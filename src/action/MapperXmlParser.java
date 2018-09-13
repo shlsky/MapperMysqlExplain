@@ -4,6 +4,10 @@ import com.google.common.base.Joiner;
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.parsing.XNode;
+import org.apache.ibatis.scripting.xmltags.MixedSqlNode;
+import org.apache.ibatis.scripting.xmltags.SqlNode;
+import org.apache.ibatis.scripting.xmltags.TrimSqlNode;
+import org.apache.ibatis.scripting.xmltags.XMLScriptBuilder;
 import org.apache.ibatis.session.Configuration;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -36,6 +40,7 @@ public class MapperXmlParser extends BaseBuilder {
 	
 	
 	private void initNodeHandlerMap() {
+		nodeHandlerMap.put("trim", new TrimHandler());
 		nodeHandlerMap.put("where", new WhereHandler());
 		nodeHandlerMap.put("set", new SetHandler());
 		nodeHandlerMap.put("if", new IfHandler());
@@ -66,6 +71,21 @@ public class MapperXmlParser extends BaseBuilder {
 			}
 		}
 		return Joiner.on(" ").join(contents);
+	}
+	
+	private class TrimHandler implements NodeHandler {
+		public TrimHandler() {
+		}
+		
+		public void handleNode(XNode nodeToHandle, List<String> targetContents) {
+			targetContents.add(nodeToHandle.getStringAttribute("prefix"));
+			String contents = MapperXmlParser.this.parseDynamicTags(nodeToHandle).replaceAll(" ","");
+			if (contents.endsWith(",")){
+				contents = contents.substring(0,contents.length()-1);
+			}
+			targetContents.add(contents);
+			targetContents.add(nodeToHandle.getStringAttribute("suffix"));
+		}
 	}
 	
 	private class ForEachHandler implements NodeHandler {
@@ -104,7 +124,12 @@ public class MapperXmlParser extends BaseBuilder {
 		
 		@Override
 		public void handleNode(XNode nodeToHandle, List<String> targetContents) {
-			targetContents.add(parseDynamicTags(nodeToHandle));
+			targetContents.add("where ");
+			String contents = parseDynamicTags(nodeToHandle).replaceAll(" ","");
+			if (contents.endsWith(",")){
+				contents = contents.substring(0,contents.length()-1);
+			}
+			targetContents.add(contents);
 		}
 	}
 	
