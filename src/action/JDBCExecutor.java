@@ -25,30 +25,32 @@ public class JDBCExecutor {
 
 	public static void main(String[] args) {
 		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			Connection conn = DriverManager.getConnection("jdbc:mysql://192.168.1.250:3307/growth","dev_w","6nvjq0_HW");
-			Statement statement = conn.createStatement();
-			ResultSet rs= statement.executeQuery("SELECT * FROM dada_grade.supplier_privilege_type");
-			ResultSetMetaData metaData = rs.getMetaData();
-			ResultSet rs1= rs;
-			while (rs.next()){
-
-				for (int i=1;i<=metaData.getColumnCount();i++){
-					System.out.println(String.format("%-15s",metaData.getColumnName(i)) + " : " + rs.getString(i));
-				}
-
-			}
+//			Class.forName("com.mysql.jdbc.Driver").newInstance();
+//			Connection conn = DriverManager.getConnection("jdbc:mysql://192.168.1.250:3307/growth","dev_w","6nvjq0_HW");
+//			Statement statement = conn.createStatement();
+//			ResultSet rs= statement.executeQuery("SELECT * FROM dada_grade.supplier_privilege_type");
+//			ResultSetMetaData metaData = rs.getMetaData();
+//			ResultSet rs1= rs;
+//			while (rs.next()){
+//
+//				for (int i=1;i<=metaData.getColumnCount();i++){
+//					System.out.println(String.format("%-15s",metaData.getColumnName(i)) + " : " + rs.getString(i));
+//				}
+//
+//			}
 //			EqualsTo
 //			Update update = (Update) CCJSqlParserUtil.parse("update supplier_privilege_type\n" +"set privilege_name=?,privilege_desc=? where id=? and privilege_code=?");
 //			UpdateGenerator updateGenerator = new UpdateGenerator();
 //			System.out.println(updateGenerator.generateSql(update,rs));
 //
 //
-//			Select select = (Select) CCJSqlParserUtil.parse("select * from supplier_privilege_type\n"+"where id in (?,?) and sequence = 1 and is_del = ?");
-//			System.out.println(select.toString());
-			Insert insert =(Insert) CCJSqlParserUtil.parse("insert into supplier_privilege_type(privilege_name,privilege_desc,sequence)\n"+"values(?,?,?)");
-			InsertGenerator insertGenerator = new InsertGenerator();
-			System.out.println(insertGenerator.generateSql(insert,rs));
+			Select select = (Select) CCJSqlParserUtil.parse("select * from supplier_privilege_type\n"+"where id in (?) and sequence = 1 and is_del = ?");
+//			SelectGenerator selectGenerator = new SelectGenerator();
+//			System.out.println(selectGenerator.generateSql(select,rs));
+			System.out.println(select.toString());
+//			Insert insert =(Insert) CCJSqlParserUtil.parse("insert into supplier_privilege_type(privilege_name,privilege_desc,sequence)\n"+"values(?,?,?)");
+//			InsertGenerator insertGenerator = new InsertGenerator();
+//			System.out.println(insertGenerator.generateSql(insert,rs));
 
 //			System.out.println(insert.toString());
 //

@@ -1,8 +1,8 @@
 package action;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
@@ -70,4 +70,41 @@ public class MapperMysqlExplainAction extends AnAction {
 		
 		dbParamsDialog.setVisible(true);
 	}
+
+	@Override
+	public void update(AnActionEvent e) {
+		super.update(e);
+
+		try{
+			boolean visible = isActionAvailable(e);
+			final Presentation presentation = e.getPresentation();
+			presentation.setVisible(visible);
+		}catch (Exception exception){
+			exception.printStackTrace();
+		}
+	}
+
+	private boolean isActionAvailable(AnActionEvent e) throws Exception{
+		final VirtualFile file = getVirtualFiles(e);
+		if (getEventProject(e) != null && file != null) {
+			final FileType fileType = file.getFileType();
+			if (!StdFileTypes.XML.equals(fileType)) {
+				return false;
+			}
+			InputStream inputStream = file.getInputStream();
+			Configuration configuration = new Configuration();
+			XPathParser xPathParser = new XPathParser(inputStream, true, configuration.getVariables(), new XMLMapperEntityResolver());
+			XNode xNode = xPathParser.evalNode("/mapper");
+			if(!Objects.isNull(xNode)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private VirtualFile getVirtualFiles(AnActionEvent e) {
+		return PlatformDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
+	}
+
 }
