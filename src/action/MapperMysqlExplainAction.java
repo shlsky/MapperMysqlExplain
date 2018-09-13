@@ -91,12 +91,16 @@ public class MapperMysqlExplainAction extends AnAction {
 			if (!StdFileTypes.XML.equals(fileType)) {
 				return false;
 			}
-			InputStream inputStream = file.getInputStream();
-			Configuration configuration = new Configuration();
-			XPathParser xPathParser = new XPathParser(inputStream, true, configuration.getVariables(), new XMLMapperEntityResolver());
-			XNode xNode = xPathParser.evalNode("/mapper");
-			if(!Objects.isNull(xNode)) {
-				return true;
+			try {
+				InputStream inputStream = file.getInputStream();
+				Configuration configuration = new Configuration();
+				XPathParser xPathParser = new XPathParser(inputStream, true, configuration.getVariables(), new XMLMapperEntityResolver());
+				XNode xNode = xPathParser.evalNode("/mapper");
+				if(!Objects.isNull(xNode)) {
+					return true;
+				}
+			}catch (Exception e1){
+				return false;
 			}
 		}
 
