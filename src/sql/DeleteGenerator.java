@@ -1,6 +1,5 @@
 package sql;
 
-import net.sf.jsqlparser.expression.BinaryExpression;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
 
@@ -20,8 +19,7 @@ public class DeleteGenerator extends BaseGenerator {
 	@Override
 	public String generateSql(Statement statement, ResultSet rs) throws Exception{
 		Delete delete = (Delete) statement;
-		BinaryExpression binaryExpression = castToBinaryExpression(delete.getWhere());
-		fillRightExpression(binaryExpression,rs);
+		expressionResolver.fillRightExpression(delete.getWhere(),rs);
 		
 		return delete.toString();
 	}

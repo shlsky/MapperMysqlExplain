@@ -1,16 +1,22 @@
 package sql;
 
-import net.sf.jsqlparser.expression.*;
-import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
+import sql.expressionResolver.BinaryExpressionResolver;
+import sql.expressionResolver.ExpressionResolver;
+import sql.expressionResolver.InExpressionResolver;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 
 /**
  * Created by hongling.shl on 2018/9/11.
  */
 public abstract class BaseGenerator {
+	
+	protected ExpressionResolver expressionResolver = new ExpressionResolver();
+	
+	{
+		expressionResolver.addSubResolver(new BinaryExpressionResolver()).addSubResolver(new InExpressionResolver());
+	}
 	
 	/**
 	 * 生成sql
@@ -28,70 +34,21 @@ public abstract class BaseGenerator {
 	 */
 	public abstract String fetchTableName(Statement statement) throws Exception;
 	
-	/**
-	 * 转换成BinaryExpression队形
-	 * @param expression
-	 * @return
-	 * @throws Exception
-	 */
-	public BinaryExpression castToBinaryExpression(Expression expression)throws Exception {
-		if (expression instanceof BinaryExpression){
-			return (BinaryExpression)(expression.getClass().cast(expression));
-		}
-		throw new RuntimeException("无法解析成BinaryExpression");
-	}
-	
-	/**
-	 * 获取列在行中的索引
-	 * @param columnName
-	 * @param rs
-	 * @return
-	 */
-	protected Integer getColumnIndex(String columnName,ResultSet rs) throws Exception {
-		rs.first();
-		ResultSetMetaData metaData = rs.getMetaData();
-		for (int i=1;i<=metaData.getColumnCount();i++){
-			if (columnName.equals(metaData.getColumnName(i))){
-				return i;
-			}
-		}
-		
-		throw new RuntimeException("无法找到列名对应的位置");
-	}
-
-
-
-
-
-	/**
-	 * 填充表达式右边的值
-	 * @param binaryExpression
-	 * @param rs
-	 * @throws Exception
-	 */
-	public void fillRightExpression(BinaryExpression binaryExpression , ResultSet rs) throws Exception{
-		
-		if (binaryExpression.getLeftExpression() instanceof BinaryExpression){
-			fillRightExpression((BinaryExpression)binaryExpression.getLeftExpression(),rs);
-		}
-		
-		if (binaryExpression.getRightExpression() instanceof BinaryExpression){
-			fillRightExpression((BinaryExpression)binaryExpression.getRightExpression(),rs);
-		}
-		
-		if (binaryExpression.getLeftExpression() instanceof Column){
-			Integer index = getColumnIndex(binaryExpression.getLeftExpression().toString(),rs);
-			rs.next();
-			Object object = rs.getObject(index);
-
-			if (object instanceof Number){
-				binaryExpression.setRightExpression(new DoubleValue(object.toString()));
-			} else {
-				binaryExpression.setRightExpression(new StringValue("'"+object.toString()+"'"));
-			}
-		}
-		
-	}
+//	/**
+//	 * 转换成BinaryExpression队形
+//	 * @param expression
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	public BinaryExpression castToBinaryExpression(Expression expression)throws Exception {
+//		if (expression == null){
+//			return null;
+//		}
+//		if (expression instanceof BinaryExpression){
+//			return (BinaryExpression)(expression.getClass().cast(expression));
+//		}
+//		throw new RuntimeException("无法解析成BinaryExpression");
+//	}
 	
 	/**
 	 * 能否处理

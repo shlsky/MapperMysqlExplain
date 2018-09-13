@@ -1,9 +1,12 @@
 package sql;
 
-import net.sf.jsqlparser.expression.*;
+import net.sf.jsqlparser.expression.DoubleValue;
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.StringValue;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.update.Update;
+import util.ResultSetUtil;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -26,10 +29,9 @@ public class UpdateGenerator extends BaseGenerator {
 		Update update = (Update) statement;
 		//处理set
 		fillUpdateSetValue(update,rs);
-
+		
 		//处理where
-		BinaryExpression binaryExpression = castToBinaryExpression(update.getWhere());
-		fillRightExpression(binaryExpression,rs);
+        expressionResolver.fillRightExpression(update.getWhere(),rs);
 
 		return update.toString();
 	}
@@ -76,7 +78,7 @@ public class UpdateGenerator extends BaseGenerator {
 
 		List<Expression> expressions = new ArrayList<>();
 		for(int i=0;i<columns.size();i++){
-			Integer index = getColumnIndex(columns.get(i).getColumnName(),rs);
+			Integer index = ResultSetUtil.getColumnIndex(columns.get(i).getColumnName(),rs);
 			rs.next();
 			Object obj = rs.getObject(index);
 			if(obj instanceof Number) {

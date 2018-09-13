@@ -4,11 +4,11 @@ import net.sf.jsqlparser.expression.DoubleValue;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.StringValue;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
-import net.sf.jsqlparser.expression.operators.relational.ItemsList;
 import net.sf.jsqlparser.expression.operators.relational.MultiExpressionList;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.insert.Insert;
+import util.ResultSetUtil;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -74,7 +74,7 @@ public class InsertGenerator extends BaseGenerator {
 
 			List<Expression> expressions = new ArrayList<>();
 			for(int i=0;i<columns.size();i++) {
-				Integer index = getColumnIndex(columns.get(i).getColumnName(),rs);
+				Integer index = ResultSetUtil.getColumnIndex(columns.get(i).getColumnName(),rs);
 				rs.next();
 				Object obj = rs.getObject(index);
 				if(obj instanceof Number) {
