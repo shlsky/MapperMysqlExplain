@@ -1,5 +1,6 @@
 package sql;
 
+import javafx.util.Pair;
 import net.sf.jsqlparser.expression.DoubleValue;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.StringValue;
@@ -25,15 +26,22 @@ public class UpdateGenerator extends BaseGenerator {
 	 * @return
 	 */
 	@Override
-	public String generateSql(Statement statement, ResultSet rs) throws Exception {
+	public Pair<String,StringBuilder> generateSql(Statement statement, ResultSet rs) throws Exception {
 		Update update = (Update) statement;
+
 		//处理set
 		fillUpdateSetValue(update,rs);
 		
 		//处理where
         expressionResolver.fillRightExpression(update.getWhere(),rs);
 
-		return update.toString();
+		StringBuilder sb = null;
+		if(update.getWhere()==null) {
+			sb = new StringBuilder();
+			sb.append("Update sql 没有where条件!");
+		}
+
+		return new Pair<>(update.toString(),sb);
 	}
 
 

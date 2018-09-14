@@ -1,5 +1,6 @@
 package sql;
 
+import javafx.util.Pair;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.FromItem;
@@ -21,11 +22,17 @@ public class SelectGenerator extends BaseGenerator {
 	 * @return
 	 */
 	@Override
-	public String generateSql(Statement statement, ResultSet rs) throws Exception {
+	public Pair<String,StringBuilder> generateSql(Statement statement, ResultSet rs) throws Exception {
 		Select select = (Select) statement;
 		PlainSelect selectBody = (PlainSelect) select.getSelectBody();
 		expressionResolver.fillRightExpression(selectBody.getWhere(),rs);
-		return select.toString();
+
+		StringBuilder sb = null;
+		if(selectBody.getWhere()==null) {
+			sb = new StringBuilder();
+			sb.append("Select sql 没有where条件!");
+		}
+		return new Pair<>(select.toString(),sb);
 	}
 	
 	/**

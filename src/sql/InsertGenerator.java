@@ -1,5 +1,6 @@
 package sql;
 
+import javafx.util.Pair;
 import net.sf.jsqlparser.expression.DoubleValue;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.StringValue;
@@ -26,11 +27,11 @@ public class InsertGenerator extends BaseGenerator {
 	 * @return
 	 */
 	@Override
-	public String generateSql(Statement statement, ResultSet rs) throws Exception {
+	public Pair<String,StringBuilder> generateSql(Statement statement, ResultSet rs) throws Exception {
 		Insert insert = (Insert) statement;
 		fillInsertValue(insert,rs);
 
-		return insert.toString();
+		return new Pair<>(insert.toString(),null);
 	}
 	
 	/**

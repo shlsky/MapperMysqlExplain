@@ -24,7 +24,7 @@ public class DeleteGenerator extends BaseGenerator {
 		StringBuilder stringBuilder = new StringBuilder();
 		Expression where = delete.getWhere();
 		if (where == null){
-			stringBuilder.append("Update sql 没有where条件!");
+			stringBuilder.append("Delete sql 没有where条件!");
 		}
 		expressionResolver.fillRightExpression(delete.getWhere(),rs);
 		
