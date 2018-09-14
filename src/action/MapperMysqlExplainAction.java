@@ -74,7 +74,7 @@ public class MapperMysqlExplainAction extends AnAction {
 						jTextArea.append("########################################################################\n\n");
 						jTextArea.append("mapper sql id : "+xNode.getStringAttribute("id") + " \n\n");
 						jTextArea.append("参数代入生成sql : \n" +realSql.getKey() + "\n\n");
-						if (realSql.getValue().length()>0){
+						if (realSql.getValue()!= null && realSql.getValue().length()>0){
 							jTextArea.append("警告 : \n" +realSql.getValue().toString() + "!!!!!\n\n");
 						}
 						
