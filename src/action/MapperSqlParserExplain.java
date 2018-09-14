@@ -1,6 +1,7 @@
 package action;
 
 import com.google.common.collect.Lists;
+import javafx.util.Pair;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
 import sql.*;
@@ -23,7 +24,7 @@ public class MapperSqlParserExplain {
 	
 	private final static String SELECT_SQL_TEMPLATE = "select * from %s limit 10";
 	
-	public String parseToRealSql(String sqlTemplate, Connection conn) throws Exception {
+	public Pair<String,StringBuilder> parseToRealSql(String sqlTemplate, Connection conn) throws Exception {
 		Statement statement = CCJSqlParserUtil.parse(sqlTemplate);
 		BaseGenerator generator = fetchSqlGenerator(statement);
 		String tableName = generator.fetchTableName(statement);

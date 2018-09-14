@@ -8,6 +8,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import dialog.DbParamsDialog;
+import javafx.util.Pair;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
 import org.apache.ibatis.parsing.XNode;
@@ -68,11 +69,12 @@ public class MapperMysqlExplainAction extends AnAction {
 					for (XNode xNode : list) {
 						MapperXmlParser mapperXmlParser = new MapperXmlParser(configuration, xNode);
 						String sqlTemplate = mapperXmlParser.parseDynamicTags(xNode).replaceAll("#\\{.*?}", "?");
-						String realSql = parserExplain.parseToRealSql(sqlTemplate, conn);
-						String explainResult = parserExplain.executeSqlExplain(realSql, conn);
+						Pair<String,StringBuilder> realSql = parserExplain.parseToRealSql(sqlTemplate, conn);
+						String explainResult = parserExplain.executeSqlExplain(realSql.getKey(), conn);
 						jTextArea.append("########################################################################\n\n");
 						jTextArea.append("mapper sql id : "+xNode.getStringAttribute("id") + " \n\n");
-						jTextArea.append("参数代入生成sql : \n" +realSql + "\n\n");
+						jTextArea.append("参数代入生成sql : \n" +realSql.getKey() + "\n\n");
+						jTextArea.append("警告 : \n" +realSql.getValue().toString() + "!!!!!\n\n");
 						jTextArea.append("-----------------------------mysql explain 结果-------------------------\n\n");
 						jTextArea.append(explainResult + "\n\n");
 						

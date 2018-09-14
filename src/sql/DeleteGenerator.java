@@ -1,6 +1,7 @@
 package sql;
 
 import javafx.util.Pair;
+import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
 
@@ -20,9 +21,14 @@ public class DeleteGenerator extends BaseGenerator {
 	@Override
 	public Pair<String,StringBuilder> generateSql(Statement statement, ResultSet rs) throws Exception{
 		Delete delete = (Delete) statement;
+		StringBuilder stringBuilder = new StringBuilder();
+		Expression where = delete.getWhere();
+		if (where == null){
+			stringBuilder.append("Update sql 没有where条件!");
+		}
 		expressionResolver.fillRightExpression(delete.getWhere(),rs);
 		
-		return delete.toString();
+		return new Pair<>(delete.toString(),stringBuilder);
 	}
 	
 	/**
