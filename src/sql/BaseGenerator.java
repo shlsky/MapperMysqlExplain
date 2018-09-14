@@ -1,5 +1,6 @@
 package sql;
 
+import javafx.util.Pair;
 import net.sf.jsqlparser.statement.Statement;
 import sql.expressionResolver.BinaryExpressionResolver;
 import sql.expressionResolver.ExpressionResolver;
@@ -24,7 +25,7 @@ public abstract class BaseGenerator {
 	 * @param rs        初始化数据
 	 * @return
 	 */
-	public abstract String generateSql(Statement statement,ResultSet rs) throws Exception;
+	public abstract Pair<String,StringBuilder> generateSql(Statement statement, ResultSet rs) throws Exception;
 	
 	/**
 	 * 获取表名称

@@ -1,5 +1,6 @@
 package sql;
 
+import javafx.util.Pair;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
 
@@ -17,7 +18,7 @@ public class DeleteGenerator extends BaseGenerator {
 	 * @return
 	 */
 	@Override
-	public String generateSql(Statement statement, ResultSet rs) throws Exception{
+	public Pair<String,StringBuilder> generateSql(Statement statement, ResultSet rs) throws Exception{
 		Delete delete = (Delete) statement;
 		expressionResolver.fillRightExpression(delete.getWhere(),rs);
 		

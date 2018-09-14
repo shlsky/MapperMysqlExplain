@@ -18,6 +18,8 @@ import javax.swing.*;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.List;
 import java.util.Objects;
 
@@ -90,6 +92,19 @@ public class MapperMysqlExplainAction extends AnAction {
 		}
 		
 		dbParamsDialog.setVisible(true);
+	}
+	
+	private String analyzeExplain(ResultSet rs) throws Exception{
+		
+		ResultSetMetaData metaData = rs.getMetaData();
+		
+		StringBuilder stringBuilder = new StringBuilder();
+		while (rs.next()) {
+			for (int i = 1; i <= metaData.getColumnCount(); i++) {
+				stringBuilder.append(String.format("%-15s", metaData.getColumnName(i))).append(" : ").append(rs.getString(i)).append("\n");
+			}
+		}
+		return stringBuilder.toString();
 	}
 	
 	@Override
